@@ -1,0 +1,113 @@
+{
+  "model": "llama3.1:8b",
+  "run": 4,
+  "latency_seconds": 155.731,
+  "ok": true,
+  "http_error": null,
+  "parse_ok": true,
+  "parse_error": null,
+  "n_questions": 10,
+  "questions": [
+    {
+      "prompt": "Quel est l'objectif principal de la Gestion de Relation Client (CRM) ?",
+      "options": [
+        "Analyser les interactions avec la clientèle",
+        "Améliorer ses interactions avec sa clientèle",
+        "Fournir un suivi personnalisé aux clients",
+        "Centraliser les données clients"
+      ],
+      "correct_index": 1
+    },
+    {
+      "prompt": "Quels sont les trois axes d'une démarche GRC efficace ?",
+      "options": [
+        "Collecte structurée des données, exploitation analytique et automatisation des tâches",
+        "Analyse des interactions avec la clientèle, suivi personnalisé et centralisation des données",
+        "Prospection, suivi des devis et gestion des litiges clients",
+        "Segmentation de la clientèle, fidélisation et satisfaction"
+      ],
+      "correct_index": 0
+    },
+    {
+      "prompt": "Quel est le coût d'acquisition d'un nouveau client ?",
+      "options": [
+        "Égal au coût de la fidélisation d'un client existant",
+        "Généralement bien inférieur à celui de la fidélisation d'un client existant",
+        "Généralement bien supérieur à celui de la fidélisation d'un client existant",
+        "Inconnu"
+      ],
+      "correct_index": 2
+    },
+    {
+      "prompt": "Quelle est l'avantage de la segmentation de la clientèle ?",
+      "options": [
+        "Améliorer les interactions avec la clientèle",
+        "Augmenter le taux de conversion",
+        "Réduire les coûts d'acquisition",
+        "Fournir un suivi personnalisé aux clients"
+      ],
+      "correct_index": 1
+    },
+    {
+      "prompt": "Quels sont les programmes que les entreprises investissent massivement ?",
+      "options": [
+        "Programmes de satisfaction et de suivi personnalisé",
+        "Programmes de prospection et de suivi des devis",
+        "Programmes de gestion des litiges clients",
+        "Programmes de segmentation de la clientèle"
+      ],
+      "correct_index": 0
+    },
+    {
+      "prompt": "Quel est l'objectif de la centralisation des données clients ?",
+      "options": [
+        "Fournir un suivi personnalisé aux clients",
+        "Améliorer les interactions avec la clientèle",
+        "Réduire les coûts d'acquisition",
+        "Centraliser les données clients partagées par les équipes commerciales, marketing et support"
+      ],
+      "correct_index": 3
+    },
+    {
+      "prompt": "Quels sont les contextes dans lesquels interviennent directement ces notions ?",
+      "options": [
+        "Prospection, suivi des devis, relance commerciale et gestion des litiges clients",
+        "Analyse des interactions avec la clientèle, suivi personnalisé et centralisation des données",
+        "Segmentation de la clientèle, fidélisation et satisfaction",
+        "Gestion de Relation Client (CRM)"
+      ],
+      "correct_index": 0
+    },
+    {
+      "prompt": "Quel est le but de la segmentation de la clientèle ?",
+      "options": [
+        "Fournir un suivi personnalisé aux clients",
+        "Améliorer les interactions avec la clientèle",
+        "Augmenter le taux de conversion",
+        "Réduire les coûts d'acquisition"
+      ],
+      "correct_index": 2
+    },
+    {
+      "prompt": "Quel est l'avantage de la GRC efficace ?",
+      "options": [
+        "Améliorer les interactions avec la clientèle",
+        "Augmenter le taux de conversion",
+        "Réduire les coûts d'acquisition",
+        "Fournir un suivi personnalisé aux clients"
+      ],
+      "correct_index": 1
+    },
+    {
+      "prompt": "Quel est l'objectif principal de la GRC ?",
+      "options": [
+        "Analyser les interactions avec la clientèle",
+        "Améliorer ses interactions avec sa clientèle",
+        "Fournir un suivi personnalisé aux clients",
+        "Centraliser les données clients"
+      ],
+      "correct_index": 1
+    }
+  ],
+  "raw_response": null
+}

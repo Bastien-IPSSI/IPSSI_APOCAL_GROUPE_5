@@ -1,0 +1,113 @@
+{
+  "model": "llama3.2:3b",
+  "run": 4,
+  "latency_seconds": 73.701,
+  "ok": true,
+  "http_error": null,
+  "parse_ok": true,
+  "parse_error": null,
+  "n_questions": 10,
+  "questions": [
+    {
+      "prompt": "Quel est l'objectif principal de la gestion de la relation client (CRM) ?",
+      "options": [
+        "Améliorer les ventes",
+        "Analyser et améliorer les interactions avec la clientèle",
+        "Gérer les litiges clients",
+        "Développer le marketing"
+      ],
+      "correct_index": 1
+    },
+    {
+      "prompt": "Quel est le coût d'acquisition d'un nouveau client en moyenne ?",
+      "options": [
+        "Moins de 10 fois supérieur à celui de la fidélisation d'un client existant",
+        "Égal à celui de la fidélisation d'un client existant",
+        "Plus de 100 fois supérieur à celui de la fidélisation d'un client existant",
+        "Différent selon l'industrie"
+      ],
+      "correct_index": 2
+    },
+    {
+      "prompt": "Quel est le rôle des logiciels CRM dans une entreprise ?",
+      "options": [
+        "Seuls pour la gestion des réclamations",
+        "Seuls pour la prospection et le suivi des devis",
+        "Centralisation de l'historique des échanges, préférences d'achat et réclamations",
+        "Aucun rôle principal"
+      ],
+      "correct_index": 0
+    },
+    {
+      "prompt": "Quelle est la principale raison pour laquelle les entreprises investissent dans des programmes de satisfaction et de suivi personnalisé ?",
+      "options": [
+        "Pour améliorer les ventes",
+        "Pour analyser et améliorer les interactions avec la clientèle",
+        "Pour gérer les litiges clients",
+        "Pour développer le marketing"
+      ],
+      "correct_index": 1
+    },
+    {
+      "prompt": "Quelle est la segmentation de la clientèle basée sur ?",
+      "options": [
+        "Seuls des critères démographiques",
+        "Seuls des critères comportementaux",
+        "Des critères à la fois démographiques et comportementaux",
+        "Aucun critère précis"
+      ],
+      "correct_index": 2
+    },
+    {
+      "prompt": "Quel est l'objectif principal de la relance commerciale ?",
+      "options": [
+        "Renouveler les contrats existants",
+        "Proposer de nouveaux produits ou services",
+        "Relancer les ventes à des clients potentiels",
+        "Gérer les litiges clients"
+      ],
+      "correct_index": 2
+    },
+    {
+      "prompt": "Quel est le rôle du suivi des devis dans une entreprise ?",
+      "options": [
+        "Seul pour la gestion des réclamations",
+        "Seul pour la prospection et l'amélioration des ventes",
+        "Pour suivre les étapes du processus de vente",
+        "Aucun rôle principal"
+      ],
+      "correct_index": 1
+    },
+    {
+      "prompt": "Quelle est la principale fonction d'une base unique partagée par les équipes commerciales, marketing et support ?",
+      "options": [
+        "Stockage des données clients",
+        "Analyse des données clients",
+        "Gestion des réclamations",
+        "Amélioration des ventes"
+      ],
+      "correct_index": 0
+    },
+    {
+      "prompt": "Quel est l'objectif principal de la prospection dans une entreprise ?",
+      "options": [
+        "Renouveler les contrats existants",
+        "Proposer de nouveaux produits ou services",
+        "Identifier et approcher de nouveaux clients potentiels",
+        "Gérer les litiges clients"
+      ],
+      "correct_index": 1
+    },
+    {
+      "prompt": "Quelle est la principale fonction des logiciels CRM dans une entreprise ?",
+      "options": [
+        "Seuls pour la gestion des réclamations",
+        "Seuls pour la prospection et le suivi des devis",
+        "Centralisation de l'historique des échanges, préférences d'achat et réclamations",
+        "Aucun rôle principal"
+      ],
+      "correct_index": 0
+    }
+  ],
+  "raw_response": null
+}

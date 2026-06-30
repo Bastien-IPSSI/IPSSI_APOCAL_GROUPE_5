@@ -1,0 +1,113 @@
+{
+  "model": "llama3.2:3b",
+  "run": 5,
+  "latency_seconds": 82.761,
+  "ok": true,
+  "http_error": null,
+  "parse_ok": true,
+  "parse_error": null,
+  "n_questions": 10,
+  "questions": [
+    {
+      "prompt": "Quel est l'objectif principal de la gestion de la relation client (CRM) ?",
+      "options": [
+        "Améliorer les interactions avec la clientèle",
+        "Analyser et améliorer les interactions avec la clientèle",
+        "Gérer les relations commerciales",
+        "Fidéliser les clients existants"
+      ],
+      "correct_index": 1
+    },
+    {
+      "prompt": "Quel est l'avantage de segmenter la clientèle en fonction de critères comportementaux ou démographiques ?",
+      "options": [
+        "Augmenter le taux de conversion",
+        "Réduire les coûts d'acquisition",
+        "Améliorer la satisfaction des clients",
+        "Gérer les litiges clients"
+      ],
+      "correct_index": 0
+    },
+    {
+      "prompt": "Quel est l'objectif principal du logiciel CRM ?",
+      "options": [
+        "Centraliser l'historique des échanges",
+        "Stocker les préférences d'achat",
+        "Gérer les réclamations",
+        "Automatiser les tâches commerciales"
+      ],
+      "correct_index": 0
+    },
+    {
+      "prompt": "Quel est l'avantage de l'automatisation des tâches commerciales répétitives ?",
+      "options": [
+        "Réduire les coûts d'acquisition",
+        "Augmenter le taux de conversion",
+        "Améliorer la satisfaction des clients",
+        "Gérer les litiges clients"
+      ],
+      "correct_index": 1
+    },
+    {
+      "prompt": "Quel est l'objectif principal du programme de satisfaction et de suivi personnalisé ?",
+      "options": [
+        "Fidéliser les clients existants",
+        "Augmenter le taux de conversion",
+        "Réduire les coûts d'acquisition",
+        "Gérer les litiges clients"
+      ],
+      "correct_index": 2
+    },
+    {
+      "prompt": "Quel est l'avantage de la segmentation de la clientèle en fonction de critères comportementaux ou démographiques ?",
+      "options": [
+        "Augmenter le taux de conversion",
+        "Réduire les coûts d'acquisition",
+        "Améliorer la satisfaction des clients",
+        "Gérer les litiges clients"
+      ],
+      "correct_index": 0
+    },
+    {
+      "prompt": "Quel est l'objectif principal de la gestion des litiges clients ?",
+      "options": [
+        "Fidéliser les clients existants",
+        "Augmenter le taux de conversion",
+        "Réduire les coûts d'acquisition",
+        "Gérer les relations commerciales"
+      ],
+      "correct_index": 3
+    },
+    {
+      "prompt": "Quel est l'avantage de la collecte structurée des données clients ?",
+      "options": [
+        "Augmenter le taux de conversion",
+        "Réduire les coûts d'acquisition",
+        "Améliorer la satisfaction des clients",
+        "Gérer les relations commerciales"
+      ],
+      "correct_index": 0
+    },
+    {
+      "prompt": "Quel est l'avantage de l'utilisation d'un logiciel CRM ?",
+      "options": [
+        "Réduire les coûts d'acquisition",
+        "Augmenter le taux de conversion",
+        "Améliorer la satisfaction des clients",
+        "Gérer les relations commerciales"
+      ],
+      "correct_index": 1
+    },
+    {
+      "prompt": "Quel est l'avantage de la gestion des relations commerciales ?",
+      "options": [
+        "Fidéliser les clients existants",
+        "Augmenter le taux de conversion",
+        "Réduire les coûts d'acquisition",
+        "Gérer les litiges clients"
+      ],
+      "correct_index": 0
+    }
+  ],
+  "raw_response": null
+}

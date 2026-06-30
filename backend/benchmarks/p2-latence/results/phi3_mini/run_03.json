@@ -1,0 +1,12 @@
+{
+  "model": "phi3:mini",
+  "run": 3,
+  "latency_seconds": 0.643,
+  "ok": false,
+  "http_error": "HTTP/Ollama : 500 Server Error: Internal Server Error for url: http://ollama:11434/api/generate",
+  "parse_ok": false,
+  "parse_error": null,
+  "n_questions": 0,
+  "questions": [],
+  "raw_response": ""
+}

@@ -1,0 +1,113 @@
+{
+  "model": "llama3.2:3b",
+  "run": 3,
+  "latency_seconds": 81.288,
+  "ok": true,
+  "http_error": null,
+  "parse_ok": true,
+  "parse_error": null,
+  "n_questions": 10,
+  "questions": [
+    {
+      "prompt": "Quel est l'objectif principal de la gestion de la relation client (CRM)?",
+      "options": [
+        "Analyser les interactions avec la clientèle",
+        "Améliorer la fidélisation des clients",
+        "Automatiser les tâches commerciales répétitives",
+        "Centraliser l'historique des échanges"
+      ],
+      "correct_index": 1
+    },
+    {
+      "prompt": "Quel est le coût typique de l'acquisition d'un nouveau client par rapport à celui de la fidélisation d'un client existant?",
+      "options": [
+        "Supérieur de 10%",
+        "Supérieur de 50%",
+        "Supérieur de 100%",
+        "Supérieur de 200%"
+      ],
+      "correct_index": 3
+    },
+    {
+      "prompt": "Quel est l'avantage de segmenter la clientèle en fonction de critères comportementaux ou démographiques?",
+      "options": [
+        "Adapter le taux de conversion",
+        "Améliorer la satisfaction des clients",
+        "Réduire les coûts de marketing",
+        "Augmenter la concurrence"
+      ],
+      "correct_index": 0
+    },
+    {
+      "prompt": "Quel est l'objectif principal d'un programme de satisfaction et de suivi personnalisé?",
+      "options": [
+        "Fidéliser les clients existants",
+        "Acquérir de nouveaux clients",
+        "Améliorer la qualité des produits",
+        "Réduire les coûts de production"
+      ],
+      "correct_index": 1
+    },
+    {
+      "prompt": "Quel est l'objectif principal d'une base unique partagée par les équipes commerciales, marketing et support?",
+      "options": [
+        "Centraliser les données clients",
+        "Améliorer la communication entre les équipes",
+        "Réduire les coûts de logiciels CRM",
+        "Augmenter la productivité"
+      ],
+      "correct_index": 0
+    },
+    {
+      "prompt": "Quel est l'avantage d'utiliser des logiciels CRM pour gérer les interactions avec la clientèle?",
+      "options": [
+        "Améliorer la satisfaction des clients",
+        "Réduire les coûts de marketing",
+        "Augmenter la concurrence",
+        "Centraliser les données clients"
+      ],
+      "correct_index": 1
+    },
+    {
+      "prompt": "Quel est l'objectif principal d'un programme de relance commerciale?",
+      "options": [
+        "Fidéliser les clients existants",
+        "Acquérir de nouveaux clients",
+        "Améliorer la qualité des produits",
+        "Réduire les coûts de production"
+      ],
+      "correct_index": 2
+    },
+    {
+      "prompt": "Quel est l'avantage d'utiliser des logiciels CRM pour gérer les litiges clients?",
+      "options": [
+        "Réduire les coûts de justice",
+        "Améliorer la communication avec les clients",
+        "Augmenter la productivité",
+        "Centraliser les données clients"
+      ],
+      "correct_index": 2
+    },
+    {
+      "prompt": "Quel est l'objectif principal d'une démarche GRC efficace?",
+      "options": [
+        "Analyser les interactions avec la clientèle",
+        "Améliorer la fidélisation des clients",
+        "Automatiser les tâches commerciales répétitives",
+        "Centraliser l'historique des échanges"
+      ],
+      "correct_index": 0
+    },
+    {
+      "prompt": "Quel est l'avantage de segmenter la clientèle en fonction de critères comportementaux ou démographiques?",
+      "options": [
+        "Adapter le taux de conversion",
+        "Améliorer la satisfaction des clients",
+        "Réduire les coûts de marketing",
+        "Augmenter la concurrence"
+      ],
+      "correct_index": 0
+    }
+  ],
+  "raw_response": null
+}

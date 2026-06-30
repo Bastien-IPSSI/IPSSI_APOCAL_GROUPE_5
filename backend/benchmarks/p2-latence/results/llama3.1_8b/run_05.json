@@ -1,0 +1,113 @@
+{
+  "model": "llama3.1:8b",
+  "run": 5,
+  "latency_seconds": 109.979,
+  "ok": true,
+  "http_error": null,
+  "parse_ok": true,
+  "parse_error": null,
+  "n_questions": 10,
+  "questions": [
+    {
+      "prompt": "Quel est l'objectif principal d'une démarche GRC efficace ?",
+      "options": [
+        "Analyser et améliorer les interactions avec la clientèle",
+        "Centraliser les données clients dans une base unique",
+        "Automatiser les tâches commerciales répétitives",
+        "Augmenter le taux de conversion"
+      ],
+      "correct_index": 0
+    },
+    {
+      "prompt": "Quel est le coût d'acquisition d'un nouveau client par rapport à celui de la fidélisation d'un client existant ?",
+      "options": [
+        "Égal",
+        "Inférieur",
+        "Supérieur",
+        "Inconnu"
+      ],
+      "correct_index": 2
+    },
+    {
+      "prompt": "Quels sont les trois axes d'une démarche GRC efficace ?",
+      "options": [
+        "Collecte structurée des données clients, exploitation analytique et automatisation des tâches commerciales",
+        "Centralisation des données clients, préférences d'achat et réclamations",
+        "Prospection, suivi des devis et gestion des litiges clients",
+        "Segmentation de la clientèle, adaptation et augmentation du taux de conversion"
+      ],
+      "correct_index": 0
+    },
+    {
+      "prompt": "Quel est l'intérêt de segmenter la clientèle ?",
+      "options": [
+        "Adapter le marketing pour augmenter les ventes",
+        "Augmenter le coût d'acquisition des nouveaux clients",
+        "Réduire les réclamations des clients existants",
+        "Améliorer la satisfaction des clients"
+      ],
+      "correct_index": 0
+    },
+    {
+      "prompt": "Quel est l'avantage de centraliser les données clients dans une base unique ?",
+      "options": [
+        "Faciliter les échanges entre les équipes commerciales, marketing et support",
+        "Augmenter le coût d'acquisition des nouveaux clients",
+        "Réduire la satisfaction des clients existants",
+        "Améliorer l'automatisation des tâches commerciales"
+      ],
+      "correct_index": 0
+    },
+    {
+      "prompt": "Quel est le but des programmes de satisfaction et de suivi personnalisé ?",
+      "options": [
+        "Augmenter le coût d'acquisition des nouveaux clients",
+        "Réduire la fidélisation des clients existants",
+        "Améliorer la satisfaction des clients et augmenter les ventes",
+        "Réduire les réclamations des clients"
+      ],
+      "correct_index": 2
+    },
+    {
+      "prompt": "Quel est l'intérêt de la segmentation de la clientèle basée sur des critères comportementaux ou démographiques ?",
+      "options": [
+        "Adapter le marketing pour augmenter les ventes",
+        "Augmenter le coût d'acquisition des nouveaux clients",
+        "Réduire les réclamations des clients existants",
+        "Améliorer la satisfaction des clients"
+      ],
+      "correct_index": 0
+    },
+    {
+      "prompt": "Quel est l'avantage de l'automatisation des tâches commerciales ?",
+      "options": [
+        "Augmenter le coût d'acquisition des nouveaux clients",
+        "Réduire la satisfaction des clients existants",
+        "Améliorer la gestion des litiges clients",
+        "Économiser du temps et des ressources"
+      ],
+      "correct_index": 3
+    },
+    {
+      "prompt": "Quel est l'intérêt de la collecte structurée des données clients ?",
+      "options": [
+        "Faciliter les échanges entre les équipes commerciales, marketing et support",
+        "Augmenter le coût d'acquisition des nouveaux clients",
+        "Réduire la satisfaction des clients existants",
+        "Améliorer l'exploitation analytique des données"
+      ],
+      "correct_index": 0
+    },
+    {
+      "prompt": "Quel est l'avantage de l'exploitation analytique des données clients ?",
+      "options": [
+        "Augmenter le coût d'acquisition des nouveaux clients",
+        "Réduire la satisfaction des clients existants",
+        "Améliorer la gestion des litiges clients",
+        "Améliorer les décisions commerciales"
+      ],
+      "correct_index": 3
+    }
+  ],
+  "raw_response": null
+}
