@@ -38,14 +38,17 @@ L'équipe priorise les 3 nouvelles stories enseignant comme suit :
 
 ## Impacts traçables
 
-**Convention de dépôt** : les artefacts de cadrage v1.0 dans `docs/cadrage/` restent intacts. Les versions v2.0 issues de la perturbation J1 vivent dans le présent dossier `docs/perturbations/j1/`.
+**Convention de dépôt** : les 7 artefacts de cadrage v1.0 dans `docs/cadrage/` restent intacts. Les 7 artefacts v2.0 issus de la perturbation J1 sont dupliqués dans le présent dossier `docs/perturbations/j1/`.
 
-- `./product-backlog.xlsx` v2.0 — +3 stories (US-21, US-22, US-23), TOTAL 137 → 166 SP, statut « En revue PO ».
+- `./persona.docx` v2.0 — Mme Lefèvre documentée (6 dimensions), bump version.
+- `./customer-journey.docx` v2.0 — parcours Mme Lefèvre 5 étapes, bump version.
+- `./product-vision-board.docx` v2.0 — cible secondaire enseignante confirmée, bump version.
+- `./product-backlog.xlsx` v2.0 — +3 stories (US-21, US-22, US-23), TOTAL 137 → 166 SP, sprints S6/S7, statut « En revue PO ».
 - `./story-map.xlsx` v2.0 — US-21/22 ajoutés en SHOULD, US-23 en COULD, colonne « Consulter résultats ».
+- `./release-planning.xlsx` v2.0 — Sprint 6 (US-07, 11, 21, 22) + Sprint 7 (US-12, 23) enrichis.
+- `./sprint-backlog.xlsx` v2.0 — Sprint 1 inchangé (focus F1+F2 conservé), bump version.
+- `./decision-moscow.md` — la présente note.
 - `./product-backlog-change-log.md` — change log v2.0.
-- `docs/cadrage/persona.docx` et `customer-journey.docx` : **non touchés** (Mme Lefèvre déjà présente dès v1.0).
-- `docs/cadrage/release-planning.xlsx` : **non touché**, S6-S7 disposent de 45,5 h-pers > 21 SP estimés.
-- `docs/cadrage/sprint-backlog.xlsx` Sprint 1 : **non touché** (focus F1 + F2 conservé).
 
 ## Critères de réévaluation
 
