@@ -42,6 +42,14 @@ services:
       - "11434:11434"
     volumes:
       - ollama-data:/root/.ollama
+    environment:
+      # RAM hôte limitée (~8 Go) : on évite l'OOM (« llama-server killed » -> 500)
+      # quand on change de modèle (sélecteur de test, perturbation P2). On ne
+      # garde qu'UN modèle résident à la fois et une seule requête en parallèle.
+      OLLAMA_MAX_LOADED_MODELS: "1"
+      OLLAMA_NUM_PARALLEL: "1"
+      # Décharge le modèle après 1 min d'inactivité (libère la RAM entre 2 tests).
+      OLLAMA_KEEP_ALIVE: "1m"
     # Sur GPU NVIDIA, décommenter pour accélérer :
     # deploy:
     #   resources:

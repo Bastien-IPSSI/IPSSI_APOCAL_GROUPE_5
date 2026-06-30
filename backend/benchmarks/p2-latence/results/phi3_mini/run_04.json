@@ -1,0 +1,12 @@
+{
+  "model": "phi3:mini",
+  "run": 4,
+  "latency_seconds": 37.626,
+  "ok": false,
+  "http_error": null,
+  "parse_ok": false,
+  "parse_error": "Seulement 5 questions générées (10 attendues).",
+  "n_questions": 0,
+  "questions": [],
+  "raw_response": "{\n  \"questions\": [\n    {\n      \"prompt\": \"Qu'est-ce que le CRM (Customer Relationship Management) ?\",\n      \"options\": [\"Un système de gestion des relations avec les clients.\", \"Une méthode pour gérer l'entreprise financièrement.\", \"Un outil pour la production industrielle.\", \"Une technique d'analyse médicale.\"],\n      \"correct_index\": 0\n    },\n    {\n      \"prompt\": \"Quels sont les trois axes sur lesquels une démarche GRC efficace s'appuie ?\",\n      \"options\": [\"Collecte des données clients, analyse analytique et automatisation.\", \"Organisation de réunions sociales, gestion financière et marketing.\", \"Maintenance du matériel informatique, développement personnel et relations familiales.\", \"Amélioration nutritionnelle, entrainement sportif et méditation.\"],\n      \"correct_index\": 0\n    },\n    {\n      \"prompt\": \"Quelle est la principale différence entre le coût d'acquisition d'un nouveau client et celui de fidéliser un client existant ?\",\n      \"options\": [\"Le premier est plus cher.\", \"Les deux sont identiques.\", \"Le second nécessite moins d'efforts.\", \"La première demande une meilleure qualité du produit.\"],\n      \"correct_index\": 1\n    },\n    {\n      \"prompt\": \"Quel rôle joue la segmentation de la clientèle dans l'amélioration des taux de conversion ?\",\n      \"options\": [\"Aucun effet.\", \"Réduction du coût d'acquisition.\", \"Amélioration personnalisée et adaptative.\", \"Diminution de la satisfaction client.\"],\n      \"correct_index\": 2\n    },\n    {\n  }]\n}"
+}
