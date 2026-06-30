@@ -59,4 +59,4 @@ Cette décision sera ré-arbitrée :
 |------|-----|----------|
 | Product Owner (externe) | _à renseigner_ | _en attente revue_ |
 | Scrum Master | _à désigner en équipe_ | _en attente revue_ |
-| Équipe (7 membres) | Équipe 05 | ✅ Consensus atteint en cadrage J1, 30/06/2026 |
+| Équipe (7 membres) | Équipe 05 | Consensus atteint en cadrage J1, 30/06/2026 |
