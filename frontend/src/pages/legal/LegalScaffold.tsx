@@ -19,6 +19,11 @@ export type LegalSection = {
   title: string;
   /** Indication pour l'équipe : quoi écrire dans cette rubrique. */
   hint: string;
+  /**
+   * Contenu réel de la rubrique. Optionnel : lorsqu'il est fourni, il remplace
+   * l'indication « à compléter » (la rubrique est alors considérée comme rédigée).
+   */
+  content?: ReactNode;
 };
 
 type Props = {
@@ -27,31 +32,47 @@ type Props = {
   sections: LegalSection[];
   /** Contenu libre optionnel ajouté après les rubriques. */
   children?: ReactNode;
+  /**
+   * `true` lorsque la page a été rédigée : masque le bandeau « à compléter »
+   * et affiche une vraie date de mise à jour. Rétro-compatible (défaut : vierge).
+   */
+  complete?: boolean;
+  /** Date de dernière mise à jour affichée en pied de page (si `complete`). */
+  lastUpdated?: string;
 };
 
-export default function LegalScaffold({ title, intro, sections, children }: Props) {
+export default function LegalScaffold({
+  title,
+  intro,
+  sections,
+  children,
+  complete = false,
+  lastUpdated,
+}: Props) {
   return (
     <article className="max-w-3xl mx-auto">
       <h1 className="text-3xl font-bold text-slate-900 mb-2">{title}</h1>
       <p className="text-slate-600 mb-6">{intro}</p>
 
-      {/* Bandeau "à compléter" + lien vers le cours de référence */}
-      <div className="mb-8 p-4 bg-amber-50 border-l-4 border-amber-400 rounded text-sm text-amber-900">
-        <p className="font-semibold mb-1">📝 Page à compléter par votre équipe</p>
-        <p>
-          Ce document est un <strong>modèle vierge</strong>. Remplacez chaque indication en italique
-          par le contenu réel de votre projet. Besoin d'aide ?{' '}
-          <a
-            href={REGLEMENTATION_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-indigo-700 underline hover:no-underline font-medium"
-          >
-            Consultez le cours « Réglementation des données »
-          </a>
-          .
-        </p>
-      </div>
+      {/* Bandeau "à compléter" + lien vers le cours de référence (pages vierges uniquement) */}
+      {!complete && (
+        <div className="mb-8 p-4 bg-amber-50 border-l-4 border-amber-400 rounded text-sm text-amber-900">
+          <p className="font-semibold mb-1">📝 Page à compléter par votre équipe</p>
+          <p>
+            Ce document est un <strong>modèle vierge</strong>. Remplacez chaque indication en italique
+            par le contenu réel de votre projet. Besoin d'aide ?{' '}
+            <a
+              href={REGLEMENTATION_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-indigo-700 underline hover:no-underline font-medium"
+            >
+              Consultez le cours « Réglementation des données »
+            </a>
+            .
+          </p>
+        </div>
+      )}
 
       <div className="space-y-6">
         {sections.map((section, i) => (
@@ -59,7 +80,11 @@ export default function LegalScaffold({ title, intro, sections, children }: Prop
             <h2 className="text-lg font-semibold text-slate-900 mb-1">
               {i + 1}. {section.title}
             </h2>
-            <p className="text-sm text-slate-500 italic">À compléter — {section.hint}</p>
+            {section.content ? (
+              <div className="text-sm text-slate-700 leading-relaxed">{section.content}</div>
+            ) : (
+              <p className="text-sm text-slate-500 italic">À compléter — {section.hint}</p>
+            )}
           </section>
         ))}
       </div>
@@ -67,8 +92,8 @@ export default function LegalScaffold({ title, intro, sections, children }: Prop
       {children}
 
       <p className="text-xs text-slate-400 mt-10 pt-4 border-t border-slate-200">
-        Dernière mise à jour : <em>à compléter</em>. Document rédigé dans le cadre pédagogique
-        APOCAL'IPSSI 2026.
+        Dernière mise à jour : <em>{complete && lastUpdated ? lastUpdated : 'à compléter'}</em>.
+        Document rédigé dans le cadre pédagogique APOCAL'IPSSI 2026.
       </p>
     </article>
   );

@@ -23,7 +23,15 @@ Ajout de stories techniques non-fonctionnelles suite aux perturbations J3 (OWASP
 **Artefacts livrés ici (`docs/perturbations/j3/`)** :
 - `decision-moscow.md` v1.0 — note d'arbitrage J3 (sécurité LLM + RGPD).
 - `politique-retention.md` v1.0 — politique de rétention des données.
+- `security-note.md` v1.0 — note de sécurité OWASP LLM-01 (diagnostic, 4 couches, limites).
+- `veille-securite.md` v1.0 — document de veille sécurité Prompt Injection (chef de projet).
+- `scenario-audit.md` v1.0 — scénario d'audit de conformité OWASP LLM-01 (bonus).
+- `scenario-test.md` v1.0 — scénario / plan de test des 5 vecteurs adversariaux (bonus).
+- `product-backlog.md` v3.0 — backlog complet post-J3 (29 stories, EP-07 Sécurité LLM & RGPD).
+- `sprint-backlog.xlsx` v3.0 — ajout de l'onglet « Sprint 5 » (12 tâches J3 : US-24 à US-27) + burndown associé.
+- `story-map.xlsx` v3.0 — colonne « Gérer (RGPD) », export RGPD Art. 15/20, effacement Art. 17.
 - `product-backlog-change-log.md` — le présent change log.
+- Frontend : page `MentionsLegalesPage.tsx` renseignée (RGPD) — `/legal/mentions-legales`.
 
 ---
 
