@@ -12,6 +12,7 @@ Endpoints d'authentification (Lot 3 : email-identifiant + validation + reset).
     GET  /api/accounts/me/export/               — export RGPD Art. 15 + 20 (SAR)
 """
 
+import json
 import logging
 
 from django.contrib.auth import login as django_login
@@ -25,7 +26,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from .emails import EmailError, send_password_reset_email, send_verification_email
-from .models import get_or_create_profile
+from .models import DataRequest, get_or_create_profile
 from .serializers import (
     ChangePasswordSerializer,
     DeleteAccountSerializer,
@@ -284,41 +285,103 @@ class ProfileView(APIView):
 class GDPRExportView(APIView):
     """Export RGPD Art. 15 (droit d'accès) + Art. 20 (portabilité).
 
-    Retourne un JSON structuré de toutes les données personnelles de
-    l'utilisateur connecté : profil + liste des quiz (sans le texte source
-    brut pour limiter la taille de la réponse).
+    Retourne les données personnelles de l'utilisateur connecté sous 2 formats :
 
-    Chaque appel est tracé dans les logs pour constituer l'audit trail SAR
-    exigé par la CNIL (preuve que la demande a bien été traitée).
+    - `?format=json` (défaut) — JSON téléchargeable (Art. 15).
+    - `?format=zip` — archive ZIP contenant `data.json`, `quizzes.csv`,
+      `responses.csv` et `audit_logs.csv` (Art. 20, format machine-readable).
+
+    Six catégories couvertes (CA-J3B-2) : compte utilisateur, cours téléversés
+    (`source_text`), quizz générés, réponses/scores, signalements de contenu,
+    logs d'audit SAR concernant l'utilisateur.
+
+    Chaque appel est persisté en base dans `DataRequest` (CA-J3B-6), avec
+    empreinte SHA-256 du fichier retourné pour preuve d'intégrité CNIL.
     """
 
     permission_classes = [IsAuthenticated]
 
     @extend_schema(
-        responses={200: OpenApiResponse(description="Export JSON des données personnelles (SAR)")},
-        description="RGPD Art. 15 + 20 — export de toutes les données personnelles.",
+        responses={200: OpenApiResponse(description="Export JSON ou ZIP des données personnelles (SAR)")},
+        description=(
+            "RGPD Art. 15 + 20 — export des données personnelles. "
+            "Paramètre `format=json|zip` (défaut json)."
+        ),
     )
     def get(self, request):
+        import hashlib
+        import io
+        import zipfile
+
+        from django.http import HttpResponse
         from django.utils import timezone
 
         from quizzes.models import Quiz
 
         user = request.user
+        requested_format = request.query_params.get("format", "json").lower()
+        if requested_format not in ("json", "zip"):
+            return Response(
+                {"detail": "format doit valoir 'json' ou 'zip'."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
 
-        # Audit trail SAR — tracé obligatoire (preuve de traitement CNIL)
+        ip = request.META.get("REMOTE_ADDR")
+
+        # 1. Audit trail — création AVANT la construction du payload pour
+        # tracer même les tentatives qui échoueraient plus loin.
+        data_request = DataRequest.objects.create(
+            requester=user,
+            requester_email_snapshot=user.email or user.username,
+            request_type=DataRequest.TYPE_PORTABILITY if requested_format == "zip" else DataRequest.TYPE_ACCESS,
+            status=DataRequest.STATUS_IN_PROGRESS,
+            ip_address=ip,
+            format_requested=requested_format,
+        )
         logger.info(
-            "SAR RGPD Art.15 — export demandé par %s (id=%d) depuis %s",
+            "SAR RGPD Art.15 — export %s demandé par %s (id=%d) depuis %s [req=%d]",
+            requested_format,
             user.email,
             user.id,
-            request.META.get("REMOTE_ADDR", "inconnu"),
+            ip or "inconnu",
+            data_request.id,
         )
 
-        quizzes = Quiz.objects.filter(user=user).prefetch_related("questions").order_by("-created_at")
+        # 2. Construction du payload — 6 catégories obligatoires (CA-J3B-2).
+        quizzes = (
+            Quiz.objects.filter(user=user)
+            .prefetch_related("questions")
+            .order_by("-created_at")
+        )
 
-        data = {
+        # Catégorie 5 (signalements) : le modèle `Report` n'est pas encore
+        # implémenté (livraison Sprint 6). On expose une liste vide + un
+        # commentaire de transparence pour rester conforme à CA-J3B-2.
+        reports_placeholder: list[dict] = []
+
+        # Catégorie 6 (logs d'audit SAR) : on ré-expose les DataRequest de
+        # l'utilisateur, y compris celle en cours de traitement.
+        audit_logs = [
+            {
+                "id": dr.id,
+                "request_type": dr.request_type,
+                "status": dr.status,
+                "format_requested": dr.format_requested,
+                "ip_address": dr.ip_address,
+                "created_at": dr.created_at.isoformat(),
+                "responded_at": dr.responded_at.isoformat() if dr.responded_at else None,
+            }
+            for dr in DataRequest.objects.filter(requester=user).order_by("-created_at")
+        ]
+
+        payload = {
             "export_date": timezone.now().isoformat(),
-            "base_legale": "RGPD Art. 15 (droit d'accès) et Art. 20 (portabilité des données)",
+            "export_id": data_request.id,
+            "base_legale": (
+                "RGPD Art. 15 (droit d'accès) et Art. 20 (portabilité des données)"
+            ),
             "responsable_traitement": "EduTutor IA — Groupe 5 IPSSI",
+            "dpo_contact": "dpo@edututor-ipssi.fr",
             "user": {
                 "id": user.id,
                 "email": user.email,
@@ -327,6 +390,15 @@ class GDPRExportView(APIView):
                 "date_joined": user.date_joined.isoformat(),
                 "email_verified": get_or_create_profile(user).email_verified,
             },
+            "uploaded_courses": [
+                {
+                    "id": q.id,
+                    "title": q.title,
+                    "source_text": q.source_text,
+                    "created_at": q.created_at.isoformat(),
+                }
+                for q in quizzes
+            ],
             "quizzes": [
                 {
                     "id": q.id,
@@ -334,26 +406,77 @@ class GDPRExportView(APIView):
                     "created_at": q.created_at.isoformat(),
                     "updated_at": q.updated_at.isoformat(),
                     "score": q.score,
-                    "questions": [
-                        {
-                            "index": qu.index,
-                            "prompt": qu.prompt,
-                            "options": qu.options,
-                            "correct_index": qu.correct_index,
-                            "selected_index": qu.selected_index,
-                        }
-                        for qu in q.questions.order_by("index")
-                    ],
                 }
                 for q in quizzes
             ],
+            "quiz_responses": [
+                {
+                    "quiz_id": q.id,
+                    "question_index": qu.index,
+                    "prompt": qu.prompt,
+                    "options": qu.options,
+                    "correct_index": qu.correct_index,
+                    "selected_index": qu.selected_index,
+                }
+                for q in quizzes
+                for qu in q.questions.order_by("index")
+            ],
+            "reports": reports_placeholder,
+            "audit_logs": audit_logs,
         }
 
-        response = Response(data)
-        response["Content-Disposition"] = (
-            f'attachment; filename="export-rgpd-user-{user.id}.json"'
-        )
+        # 3. Sérialisation selon le format demandé + empreinte SHA-256.
+        if requested_format == "json":
+            body_bytes = json.dumps(payload, ensure_ascii=False, indent=2).encode("utf-8")
+            file_hash = hashlib.sha256(body_bytes).hexdigest()
+            response = HttpResponse(body_bytes, content_type="application/json")
+            filename = f"export-rgpd-user-{user.id}.json"
+        else:
+            # ZIP contenant data.json + 3 CSV (quizzes, responses, audit_logs).
+            buf = io.BytesIO()
+            with zipfile.ZipFile(buf, mode="w", compression=zipfile.ZIP_DEFLATED) as zf:
+                zf.writestr(
+                    "data.json",
+                    json.dumps(payload, ensure_ascii=False, indent=2),
+                )
+                zf.writestr("quizzes.csv", _csv_from(payload["quizzes"]))
+                zf.writestr("responses.csv", _csv_from(payload["quiz_responses"]))
+                zf.writestr("audit_logs.csv", _csv_from(payload["audit_logs"]))
+                zf.writestr("uploaded_courses.csv", _csv_from(payload["uploaded_courses"]))
+            body_bytes = buf.getvalue()
+            file_hash = hashlib.sha256(body_bytes).hexdigest()
+            response = HttpResponse(body_bytes, content_type="application/zip")
+            filename = f"export-rgpd-user-{user.id}.zip"
+
+        response["Content-Disposition"] = f'attachment; filename="{filename}"'
+
+        # 4. Clôture de l'audit trail — statut « répondue » + hash intégrité.
+        data_request.status = DataRequest.STATUS_ANSWERED
+        data_request.file_hash = file_hash
+        data_request.responded_at = timezone.now()
+        data_request.save(update_fields=["status", "file_hash", "responded_at"])
+
         return response
+
+
+def _csv_from(rows: list[dict]) -> str:
+    """Sérialise une liste de dicts homogènes en CSV (helper J3-bis)."""
+    import csv
+    import io
+
+    if not rows:
+        return ""
+    buf = io.StringIO()
+    fieldnames = list(rows[0].keys())
+    writer = csv.DictWriter(buf, fieldnames=fieldnames)
+    writer.writeheader()
+    for row in rows:
+        # Sérialise les valeurs list/dict en JSON pour tenir dans une cellule.
+        writer.writerow({
+            k: json.dumps(v, ensure_ascii=False) if isinstance(v, (list, dict)) else v
+            for k, v in row.items()
+        })
+    return buf.getvalue()
 
 
 class ChangePasswordView(APIView):

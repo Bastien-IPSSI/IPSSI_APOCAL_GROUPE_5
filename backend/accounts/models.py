@@ -42,3 +42,65 @@ def get_or_create_profile(user) -> Profile:
     """
     profile, _ = Profile.objects.get_or_create(user=user)
     return profile
+
+
+class DataRequest(models.Model):
+    """Audit trail persistant des demandes RGPD (Subject Access Requests).
+
+    Perturbation J3-bis (CA-J3B-6) : la CNIL exige une preuve de traitement
+    des demandes d'accès. Les logs applicatifs sont volatils et disparaissent
+    au redémarrage du pod ; on persiste donc chaque appel en base.
+    """
+
+    STATUS_RECEIVED = "received"
+    STATUS_IN_PROGRESS = "in_progress"
+    STATUS_ANSWERED = "answered"
+    STATUS_CHOICES = [
+        (STATUS_RECEIVED, "Reçue"),
+        (STATUS_IN_PROGRESS, "En cours de traitement"),
+        (STATUS_ANSWERED, "Répondue"),
+    ]
+
+    TYPE_ACCESS = "access"       # Art. 15 — export self-service
+    TYPE_ERASURE = "erasure"     # Art. 17 — suppression compte
+    TYPE_PORTABILITY = "portability"  # Art. 20 — export machine-readable
+    TYPE_CHOICES = [
+        (TYPE_ACCESS, "Accès (Art. 15)"),
+        (TYPE_ERASURE, "Effacement (Art. 17)"),
+        (TYPE_PORTABILITY, "Portabilité (Art. 20)"),
+    ]
+
+    requester = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,  # on garde la trace même si le compte est supprimé
+        null=True,
+        related_name="data_requests",
+    )
+    requester_email_snapshot = models.EmailField(
+        help_text="Copie de l'email à la date de la demande (survit à la suppression du compte)",
+    )
+    request_type = models.CharField(max_length=16, choices=TYPE_CHOICES, default=TYPE_ACCESS)
+    status = models.CharField(max_length=16, choices=STATUS_CHOICES, default=STATUS_RECEIVED)
+    ip_address = models.GenericIPAddressField(null=True, blank=True)
+    format_requested = models.CharField(
+        max_length=8,
+        default="json",
+        help_text="Format retourné (json, csv, zip)",
+    )
+    file_hash = models.CharField(
+        max_length=64,
+        blank=True,
+        help_text="SHA-256 du fichier retourné, pour prouver l'intégrité",
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+    responded_at = models.DateTimeField(null=True, blank=True)
+
+    class Meta:
+        ordering = ["-created_at"]
+        indexes = [
+            models.Index(fields=["requester", "created_at"]),
+            models.Index(fields=["status"]),
+        ]
+
+    def __str__(self) -> str:
+        return f"DataRequest<{self.request_type} · {self.requester_email_snapshot} · {self.created_at:%Y-%m-%d}>"

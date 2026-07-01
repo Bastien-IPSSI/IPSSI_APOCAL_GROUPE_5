@@ -126,3 +126,32 @@ export async function deleteAccount(password: string): Promise<void> {
   await api.delete('/accounts/profile/', { data: { password } });
   clearToken();
 }
+
+/**
+ * Export RGPD Art. 15 + 20 (perturbation J3-bis, CA-J3B-3/4).
+ *
+ * Télécharge un fichier JSON (défaut) ou ZIP (`format='zip'` — inclut CSV).
+ * Le nom de fichier est extrait du header `Content-Disposition` renvoyé par
+ * l'API, avec un fallback lisible.
+ */
+export async function exportGdprData(format: 'json' | 'zip' = 'json'): Promise<void> {
+  const { data, headers } = await api.get('/accounts/me/export/', {
+    params: { format },
+    responseType: 'blob',
+  });
+  const blob = data as Blob;
+
+  // Extraction du filename depuis Content-Disposition ; fallback sinon.
+  const disposition = String(headers['content-disposition'] ?? '');
+  const match = /filename="?([^";]+)"?/.exec(disposition);
+  const filename = match?.[1] ?? `export-rgpd.${format}`;
+
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = filename;
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  URL.revokeObjectURL(url);
+}
