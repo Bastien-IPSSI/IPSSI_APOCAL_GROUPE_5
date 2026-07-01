@@ -90,3 +90,60 @@ def test_logout_invalidates_token(client, user):
     assert response.status_code == 204
     # Le token n'existe plus
     assert not Token.objects.filter(key=token.key).exists()
+
+
+# ---------------------------------------------------------------------------
+# J3-bis — Tests RGPD Art. 15 (export SAR)
+# ---------------------------------------------------------------------------
+
+
+def test_gdpr_export_requires_auth(client):
+    response = client.get("/api/accounts/me/export/")
+    assert response.status_code in (401, 403)
+
+
+def test_gdpr_export_returns_user_data(client, user):
+    from rest_framework.authtoken.models import Token
+
+    token = Token.objects.create(user=user)
+    client.credentials(HTTP_AUTHORIZATION=f"Token {token.key}")
+    response = client.get("/api/accounts/me/export/")
+    assert response.status_code == 200
+
+    data = response.data
+    assert data["user"]["email"] == "alice@test.com"
+    assert "export_date" in data
+    assert "base_legale" in data
+    assert isinstance(data["quizzes"], list)
+
+
+def test_gdpr_export_includes_quizzes(client, user):
+    """Vérifie que les quiz de l'utilisateur apparaissent dans l'export."""
+    from rest_framework.authtoken.models import Token
+
+    from quizzes.models import Question, Quiz
+
+    quiz = Quiz.objects.create(user=user, title="Cours test", source_text="source")
+    Question.objects.create(
+        quiz=quiz, index=1, prompt="Q?", options=["A", "B", "C", "D"], correct_index=0
+    )
+
+    token = Token.objects.create(user=user)
+    client.credentials(HTTP_AUTHORIZATION=f"Token {token.key}")
+    response = client.get("/api/accounts/me/export/")
+    assert response.status_code == 200
+
+    quizzes = response.data["quizzes"]
+    assert len(quizzes) == 1
+    assert quizzes[0]["title"] == "Cours test"
+    assert len(quizzes[0]["questions"]) == 1
+
+
+def test_gdpr_export_content_disposition(client, user):
+    """L'en-tête Content-Disposition doit inciter le navigateur à télécharger le fichier."""
+    from rest_framework.authtoken.models import Token
+
+    token = Token.objects.create(user=user)
+    client.credentials(HTTP_AUTHORIZATION=f"Token {token.key}")
+    response = client.get("/api/accounts/me/export/")
+    assert "attachment" in response.get("Content-Disposition", "")
