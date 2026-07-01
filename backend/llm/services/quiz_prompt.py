@@ -13,7 +13,7 @@ profitent automatiquement.
 import json
 import logging
 import re
-from typing import Callable
+from collections.abc import Callable
 
 from .base import LLMError
 
