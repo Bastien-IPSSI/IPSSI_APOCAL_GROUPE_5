@@ -17,7 +17,7 @@
 import { useState, type FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
-import { changePassword, deleteAccount, updateProfile } from '@/api/auth';
+import { changePassword, deleteAccount, exportGdprData, updateProfile } from '@/api/auth';
 import { getApiErrorMessage } from '@/api/errors';
 
 export default function ProfilePage() {
@@ -45,6 +45,22 @@ export default function ProfilePage() {
   const [delConfirm, setDelConfirm] = useState(false);
   const [delErr, setDelErr] = useState<string | null>(null);
   const [delLoading, setDelLoading] = useState(false);
+
+  // --- Zone RGPD (J3-bis) ---
+  const [exportLoading, setExportLoading] = useState<'json' | 'zip' | null>(null);
+  const [exportErr, setExportErr] = useState<string | null>(null);
+
+  const handleExport = async (format: 'json' | 'zip') => {
+    setExportErr(null);
+    setExportLoading(format);
+    try {
+      await exportGdprData(format);
+    } catch (err) {
+      setExportErr(getApiErrorMessage(err, 'Export impossible.'));
+    } finally {
+      setExportLoading(null);
+    }
+  };
 
   const handleInfo = async (e: FormEvent) => {
     e.preventDefault();
@@ -220,20 +236,38 @@ export default function ProfilePage() {
         </form>
       </section>
 
-      {/* Placeholders RGPD / signalement (à compléter pendant la semaine) */}
+      {/* Mes données (RGPD J3-bis) + signalement (J4 placeholder) */}
       <section className="card bg-slate-50">
         <h2 className="text-lg font-semibold text-slate-900 mb-2">Mes données</h2>
-        <p className="text-sm text-slate-500 mb-4">
-          Fonctionnalités à construire pendant la semaine APOCAL'IPSSI.
+        <p className="text-sm text-slate-600 mb-4">
+          Vous pouvez à tout moment exporter vos données personnelles conformément au
+          <strong> RGPD Art. 15 (droit d'accès)</strong> et <strong>Art. 20 (portabilité)</strong>.
+          Le format JSON est adapté à la lecture ; le format ZIP contient JSON + CSV
+          (quizz, réponses, cours téléversés, logs d'audit).
         </p>
+        {exportErr && (
+          <div className="mb-4 p-3 bg-rose-50 border-l-4 border-rose-500 text-sm text-rose-900 rounded">
+            {exportErr}
+          </div>
+        )}
         <div className="flex flex-wrap gap-3">
           <button
             type="button"
-            disabled
-            title="À implémenter (J3-bis) — droit à la portabilité RGPD"
-            className="btn-secondary opacity-60 cursor-not-allowed"
+            onClick={() => handleExport('json')}
+            disabled={exportLoading !== null}
+            title="Télécharger toutes vos données au format JSON"
+            className="btn-secondary"
           >
-            Exporter mes données (bientôt)
+            {exportLoading === 'json' ? 'Préparation…' : 'Exporter mes données (JSON)'}
+          </button>
+          <button
+            type="button"
+            onClick={() => handleExport('zip')}
+            disabled={exportLoading !== null}
+            title="Télécharger vos données au format ZIP (JSON + CSV)"
+            className="btn-secondary"
+          >
+            {exportLoading === 'zip' ? 'Préparation…' : 'Exporter mes données (ZIP)'}
           </button>
           <button
             type="button"
