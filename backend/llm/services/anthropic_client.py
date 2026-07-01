@@ -16,7 +16,7 @@ import requests
 from django.conf import settings
 
 from .base import LLMClient, LLMError
-from .quiz_prompt import SYSTEM_PROMPT, build_user_prompt, parse_and_validate_quiz
+from .quiz_prompt import SYSTEM_PROMPT, build_user_prompt, generate_quiz_with_retry
 
 ANTHROPIC_URL = "https://api.anthropic.com/v1/messages"
 ANTHROPIC_VERSION = "2023-06-01"
@@ -38,8 +38,8 @@ class AnthropicLLMClient(LLMClient):
             )
 
     def generate_quiz(self, source_text: str, title: str) -> list[dict]:
-        raw = self._call_anthropic(source_text, title)
-        return parse_and_validate_quiz(raw)
+        # Couche 4 J3 : retry avec plafond en cas d'échec validation post-LLM.
+        return generate_quiz_with_retry(self._call_anthropic, source_text, title)
 
     # ----- internals -----
 

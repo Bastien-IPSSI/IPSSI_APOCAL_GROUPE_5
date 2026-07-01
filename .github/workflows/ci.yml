@@ -89,6 +89,13 @@ jobs:
       - name: Run pytest with coverage
         run: pytest --cov --cov-report=term-missing
 
+      # J3 — Couche 4 OWASP LLM-01 : step dédié pour rendre visible aux
+      # évaluateurs et à l'équipe qu'une régression sécurité serait bloquée.
+      # Rejoue les 5 tests adversariaux (clair, base64, multilingue,
+      # blanc-sur-blanc, Unicode) + les 2 tests du wrapper retry.
+      - name: Adversarial security tests (J3 OWASP LLM-01)
+        run: pytest -k adversarial -v
+
   # --------------------------------------------------------------------------
   # FRONTEND — React + Vite + tests vitest
   # --------------------------------------------------------------------------
