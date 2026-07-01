@@ -17,7 +17,7 @@ import requests
 from django.conf import settings
 
 from .base import LLMClient, LLMError
-from .quiz_prompt import SYSTEM_PROMPT, build_user_prompt, parse_and_validate_quiz
+from .quiz_prompt import SYSTEM_PROMPT, build_user_prompt, generate_quiz_with_retry
 
 
 class OpenAICompatibleClient(LLMClient):
@@ -49,8 +49,10 @@ class OpenAICompatibleClient(LLMClient):
             )
 
     def generate_quiz(self, source_text: str, title: str) -> list[dict]:
-        raw = self._call(source_text, title)
-        return parse_and_validate_quiz(raw)
+        # Couche 4 J3 : le wrapper retente jusqu'à 3 fois si la validation
+        # post-LLM (couche 3) échoue (structure invalide, injection ayant
+        # altéré la sortie). Voir `quiz_prompt.generate_quiz_with_retry`.
+        return generate_quiz_with_retry(self._call, source_text, title)
 
     # ----- internals -----
 

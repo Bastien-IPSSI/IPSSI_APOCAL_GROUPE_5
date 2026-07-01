@@ -9,6 +9,7 @@ Endpoints d'authentification (Lot 3 : email-identifiant + validation + reset).
     POST /api/accounts/resend-verification/      — renvoyer l'email de validation
     POST /api/accounts/password-reset/           — demander un reset (envoie un email)
     POST /api/accounts/password-reset/confirm/   — définir le nouveau mot de passe
+    GET  /api/accounts/me/export/               — export RGPD Art. 15 + 20 (SAR)
 """
 
 import logging
@@ -278,6 +279,81 @@ class ProfileView(APIView):
         django_logout(request)
         user.delete()  # supprime aussi le Profile (on_delete=CASCADE)
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class GDPRExportView(APIView):
+    """Export RGPD Art. 15 (droit d'accès) + Art. 20 (portabilité).
+
+    Retourne un JSON structuré de toutes les données personnelles de
+    l'utilisateur connecté : profil + liste des quiz (sans le texte source
+    brut pour limiter la taille de la réponse).
+
+    Chaque appel est tracé dans les logs pour constituer l'audit trail SAR
+    exigé par la CNIL (preuve que la demande a bien été traitée).
+    """
+
+    permission_classes = [IsAuthenticated]
+
+    @extend_schema(
+        responses={200: OpenApiResponse(description="Export JSON des données personnelles (SAR)")},
+        description="RGPD Art. 15 + 20 — export de toutes les données personnelles.",
+    )
+    def get(self, request):
+        from django.utils import timezone
+
+        from quizzes.models import Quiz
+
+        user = request.user
+
+        # Audit trail SAR — tracé obligatoire (preuve de traitement CNIL)
+        logger.info(
+            "SAR RGPD Art.15 — export demandé par %s (id=%d) depuis %s",
+            user.email,
+            user.id,
+            request.META.get("REMOTE_ADDR", "inconnu"),
+        )
+
+        quizzes = Quiz.objects.filter(user=user).prefetch_related("questions").order_by("-created_at")
+
+        data = {
+            "export_date": timezone.now().isoformat(),
+            "base_legale": "RGPD Art. 15 (droit d'accès) et Art. 20 (portabilité des données)",
+            "responsable_traitement": "EduTutor IA — Groupe 5 IPSSI",
+            "user": {
+                "id": user.id,
+                "email": user.email,
+                "first_name": user.first_name,
+                "last_name": user.last_name,
+                "date_joined": user.date_joined.isoformat(),
+                "email_verified": get_or_create_profile(user).email_verified,
+            },
+            "quizzes": [
+                {
+                    "id": q.id,
+                    "title": q.title,
+                    "created_at": q.created_at.isoformat(),
+                    "updated_at": q.updated_at.isoformat(),
+                    "score": q.score,
+                    "questions": [
+                        {
+                            "index": qu.index,
+                            "prompt": qu.prompt,
+                            "options": qu.options,
+                            "correct_index": qu.correct_index,
+                            "selected_index": qu.selected_index,
+                        }
+                        for qu in q.questions.order_by("index")
+                    ],
+                }
+                for q in quizzes
+            ],
+        }
+
+        response = Response(data)
+        response["Content-Disposition"] = (
+            f'attachment; filename="export-rgpd-user-{user.id}.json"'
+        )
+        return response
 
 
 class ChangePasswordView(APIView):
