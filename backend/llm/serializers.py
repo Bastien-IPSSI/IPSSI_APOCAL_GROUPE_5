@@ -11,6 +11,7 @@ class GenerateQuizSerializer(serializers.Serializer):
     """
 
     title = serializers.CharField(max_length=200)
+    language = serializers.CharField(required=False, default='fr')
     pdf = serializers.FileField(required=False)
     source_text = serializers.CharField(required=False, allow_blank=True)
 

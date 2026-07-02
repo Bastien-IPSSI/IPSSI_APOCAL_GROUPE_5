@@ -124,6 +124,7 @@ class GenerateQuizView(APIView):
         serializer = GenerateQuizSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         title = serializer.validated_data["title"]
+        language = serializer.validated_data.get("language", "fr")
         pdf_file = serializer.validated_data.get("pdf")
         source_text = (serializer.validated_data.get("source_text") or "").strip()
 
@@ -136,7 +137,9 @@ class GenerateQuizView(APIView):
 
         # 2. Appel LLM (Ollama ou Mock)
         try:
-            questions_data = get_llm_client().generate_quiz(source_text=source_text, title=title)
+            questions_data = get_llm_client().generate_quiz(
+                source_text=source_text, title=title, language=language
+            )
         except LLMError as exc:
             return Response(
                 {"detail": f"Échec génération LLM : {exc}"},

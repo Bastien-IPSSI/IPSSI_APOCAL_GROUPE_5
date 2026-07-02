@@ -17,7 +17,7 @@ import requests
 from django.conf import settings
 
 from .base import LLMClient, LLMError
-from .quiz_prompt import SYSTEM_PROMPT, build_user_prompt, generate_quiz_with_retry
+from .quiz_prompt import get_system_prompt, build_user_prompt, generate_quiz_with_retry
 
 
 class OpenAICompatibleClient(LLMClient):
@@ -48,20 +48,20 @@ class OpenAICompatibleClient(LLMClient):
                 + "Ou utilisez LLM_BACKEND=ollama (gratuit, local) pour le développement."
             )
 
-    def generate_quiz(self, source_text: str, title: str) -> list[dict]:
+    def generate_quiz(self, source_text: str, title: str, language: str = "fr") -> list[dict]:
         # Couche 4 J3 : le wrapper retente jusqu'à 3 fois si la validation
         # post-LLM (couche 3) échoue (structure invalide, injection ayant
         # altéré la sortie). Voir `quiz_prompt.generate_quiz_with_retry`.
-        return generate_quiz_with_retry(self._call, source_text, title)
+        return generate_quiz_with_retry(self._call, source_text, title, language=language)
 
     # ----- internals -----
 
-    def _call(self, source_text: str, title: str) -> str:
+    def _call(self, source_text: str, title: str, language: str = "fr") -> str:
         payload = {
             "model": self.model,
             # Séparation system / user (défense de base contre l'injection, cf. J3).
             "messages": [
-                {"role": "system", "content": SYSTEM_PROMPT},
+                {"role": "system", "content": get_system_prompt(language)},
                 {"role": "user", "content": build_user_prompt(source_text, title)},
             ],
             "temperature": 0.4,

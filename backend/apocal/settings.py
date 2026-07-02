@@ -322,3 +322,36 @@ if SECURE_PROD:
     SECURE_HSTS_PRELOAD = True
     SECURE_CONTENT_TYPE_NOSNIFF = True
     X_FRAME_OPTIONS = "DENY"
+
+# ----------------------------------------------------------------------------
+# Logging (Sénior Scalability)
+# ----------------------------------------------------------------------------
+import logging
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "formatters": {
+        "json": {
+            "format": '{"timestamp": "%(asctime)s", "level": "%(levelname)s", "message": "%(message)s", "module": "%(module)s"}',
+        },
+        "standard": {
+            "format": "%(levelname)s [%(asctime)s] %(name)s: %(message)s",
+        },
+    },
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+            "formatter": "standard",
+        },
+        "json_file": {
+            "class": "logging.FileHandler",
+            "filename": "backend_logs.json",
+            "formatter": "json",
+        },
+    },
+    "root": {
+        "handlers": ["console", "json_file"],
+        "level": "INFO",
+    },
+}
