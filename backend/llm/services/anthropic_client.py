@@ -16,7 +16,7 @@ import requests
 from django.conf import settings
 
 from .base import LLMClient, LLMError
-from .quiz_prompt import SYSTEM_PROMPT, build_user_prompt, generate_quiz_with_retry
+from .quiz_prompt import get_system_prompt, build_user_prompt, generate_quiz_with_retry
 
 ANTHROPIC_URL = "https://api.anthropic.com/v1/messages"
 ANTHROPIC_VERSION = "2023-06-01"
@@ -37,13 +37,13 @@ class AnthropicLLMClient(LLMClient):
                 "LLM_BACKEND=ollama (gratuit, local) pour le développement."
             )
 
-    def generate_quiz(self, source_text: str, title: str) -> list[dict]:
+    def generate_quiz(self, source_text: str, title: str, language: str = "fr") -> list[dict]:
         # Couche 4 J3 : retry avec plafond en cas d'échec validation post-LLM.
-        return generate_quiz_with_retry(self._call_anthropic, source_text, title)
+        return generate_quiz_with_retry(self._call_anthropic, source_text, title, language=language)
 
     # ----- internals -----
 
-    def _call_anthropic(self, source_text: str, title: str) -> str:
+    def _call_anthropic(self, source_text: str, title: str, language: str = "fr") -> str:
         try:
             response = requests.post(
                 ANTHROPIC_URL,
@@ -55,7 +55,7 @@ class AnthropicLLMClient(LLMClient):
                 json={
                     "model": self.model,
                     "max_tokens": 4096,  # obligatoire chez Anthropic ; large pour 10 QCM
-                    "system": SYSTEM_PROMPT,  # consignes isolées du contenu utilisateur
+                    "system": get_system_prompt(language),  # consignes isolées du contenu utilisateur
                     "messages": [
                         {"role": "user", "content": build_user_prompt(source_text, title)},
                     ],

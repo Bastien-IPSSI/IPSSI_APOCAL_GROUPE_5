@@ -3,11 +3,14 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useTheme } from '@/contexts/ThemeContext';
 import { useSiteConfig } from '@/contexts/SiteConfigContext';
 import VerifyEmailBanner from '@/components/VerifyEmailBanner';
+import { useTranslation } from 'react-i18next';
+import LanguageSelector from '@/components/LanguageSelector';
 
 export default function Layout() {
   const { user, logout } = useAuth();
   const { theme, toggleTheme } = useTheme();
   const { config } = useSiteConfig();
+  const { t } = useTranslation();
   const navigate = useNavigate();
 
   const handleLogout = async () => {
@@ -15,14 +18,12 @@ export default function Layout() {
     navigate('/login');
   };
 
-  // Nom de l'app dynamique (admin) : le dernier mot est accentué en ambre.
   const nameWords = config.app_name.trim().split(' ');
   const nameHead = nameWords.slice(0, -1).join(' ');
   const nameTail = nameWords[nameWords.length - 1];
 
   return (
     <div className="min-h-screen flex flex-col">
-      {/* Header */}
       <header className="bg-white border-b border-slate-200 sticky top-0 z-10 backdrop-blur">
         <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
           <Link to="/" className="flex items-center gap-3 text-slate-900 font-bold text-lg">
@@ -36,25 +37,20 @@ export default function Layout() {
           </Link>
 
           <nav className="flex items-center gap-4 text-sm">
+            <LanguageSelector />
             {user ? (
               <>
                 <Link to="/upload" className="text-slate-700 hover:text-indigo-600">
-                  Nouveau quiz
-                </Link>
-                <Link
-                  to="/dashboard"
-                  className="text-slate-700 hover:text-indigo-600 hidden sm:inline"
-                >
-                  Tableau de bord
+                  {t('common.upload')}
                 </Link>
                 <Link
                   to="/review"
                   className="text-slate-700 hover:text-indigo-600 hidden sm:inline"
                 >
-                  Révision
+                  {t('common.review')}
                 </Link>
                 <Link to="/history" className="text-slate-700 hover:text-indigo-600">
-                  Historique
+                  {t('common.history')}
                 </Link>
                 {user.is_staff && (
                   <Link to="/admin" className="text-amber-600 font-medium hover:text-amber-700">
@@ -71,16 +67,16 @@ export default function Layout() {
                 </Link>
                 <ThemeToggle theme={theme} onToggle={toggleTheme} />
                 <button onClick={handleLogout} className="btn-secondary">
-                  Déconnexion
+                  {t('common.logout')}
                 </button>
               </>
             ) : (
               <>
                 <Link to="/login" className="text-slate-700 hover:text-indigo-600">
-                  Connexion
+                  {t('common.login')}
                 </Link>
                 <Link to="/signup" className="btn-primary">
-                  S'inscrire
+                  {t('common.signup')}
                 </Link>
                 <ThemeToggle theme={theme} onToggle={toggleTheme} />
               </>
@@ -89,14 +85,12 @@ export default function Layout() {
         </div>
       </header>
 
-      {/* Bannière globale configurable par l'admin (Lot 8) */}
       {config.banner_enabled && config.banner_message && (
         <div className="bg-indigo-600 text-white text-sm">
           <div className="max-w-6xl mx-auto px-4 py-2 text-center">{config.banner_message}</div>
         </div>
       )}
 
-      {/* Bandeau d'invitation à confirmer l'email (validation "soft") */}
       <VerifyEmailBanner />
 
       <main className="flex-1 max-w-6xl mx-auto w-full px-4 py-8">
@@ -105,7 +99,6 @@ export default function Layout() {
 
       <footer className="border-t border-slate-200 mt-12">
         <div className="max-w-6xl mx-auto px-4 py-6 space-y-3 text-sm text-slate-500">
-          {/* Liens légaux (pages à compléter par les étudiants) */}
           <nav className="flex flex-wrap gap-x-4 gap-y-1">
             <Link to="/legal/mentions-legales" className="hover:text-indigo-600">
               Mentions légales
@@ -141,7 +134,6 @@ export default function Layout() {
   );
 }
 
-/** Petit bouton de bascule clair/sombre (MVP2 — Lot 6). */
 function ThemeToggle({ theme, onToggle }: { theme: 'light' | 'dark'; onToggle: () => void }) {
   const isDark = theme === 'dark';
   return (
